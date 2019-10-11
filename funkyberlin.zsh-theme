@@ -74,30 +74,6 @@ git_prompt () {
   echo $_result
 }
 
-
-svn_prompt () {
-  local _rev
-  local _branch
-  local _result=""
-
-  local _SVN_PREFIX="svn"
-
-    if in_svn; then
-        _rev=$(svn_get_rev_nr)
-        _branch=$(svn_get_branch_name)
-        _repo=$(svn_get_repo_name)
-        _modified=$(svn st | grep "M" | wc -l | tr -d '[:space:]')
-        _untracked=$(svn st | grep "?" | wc -l  | tr -d '[:space:]')
-
-        if [ `svn_dirty_choose_pwd 1 0` -eq 1 ]; then
-          _result="[$_SVN_PREFIX $fg_bold[red]±$reset_color M:$fg[red]$_modified$reset_color ?:$fg[yellow]$_untracked$reset_color]"
-        else
-          _result="[$_SVN_PREFIX $FG[154]✓$reset_color]"
-        fi
-    fi
-    echo $_result
-}
-
 _PATH="$fg[yellow]%~$reset_color"
 
 if [[ $EUID -eq 0 ]]; then
@@ -119,7 +95,7 @@ _BOTTOM="%* > $_LIBERTY "
 
 berlin_precmd () {
   print
-  _VERSIONCTRL="$(git_prompt)$(svn_prompt)$(nvm_prompt_info)"
+  _VERSIONCTRL="$(git_prompt)$(nvm_prompt_info)"
   print -P "$_TOP $_VERSIONCTRL"
 }
 
